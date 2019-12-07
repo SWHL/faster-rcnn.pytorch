@@ -13,16 +13,27 @@ from __future__ import print_function
 import numpy as np
 import numpy.random as npr
 from scipy.misc import imread
+<<<<<<< HEAD
 from lib.model.utils.config import cfg
 from lib.model.utils.blob import prep_im_for_blob, im_list_to_blob
 import pdb
 
 
+=======
+from model.utils.config import cfg
+from model.utils.blob import prep_im_for_blob, im_list_to_blob
+import pdb
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 def get_minibatch(roidb, num_classes):
   """Given a roidb, construct a minibatch sampled from it."""
   num_images = len(roidb)
   # Sample random scales to use for each image in this batch
+<<<<<<< HEAD
   random_scale_inds = npr.randint(0, high=len(cfg.TRAIN.SCALES), size=num_images)
+=======
+  random_scale_inds = npr.randint(0, high=len(cfg.TRAIN.SCALES),
+                  size=num_images)
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
   assert(cfg.TRAIN.BATCH_SIZE % num_images == 0), \
     'num_images ({}) must divide BATCH_SIZE ({})'. \
     format(num_images, cfg.TRAIN.BATCH_SIZE)
@@ -46,7 +57,13 @@ def get_minibatch(roidb, num_classes):
   gt_boxes[:, 0:4] = roidb[0]['boxes'][gt_inds, :] * im_scales[0]
   gt_boxes[:, 4] = roidb[0]['gt_classes'][gt_inds]
   blobs['gt_boxes'] = gt_boxes
+<<<<<<< HEAD
   blobs['im_info'] = np.array([[im_blob.shape[1], im_blob.shape[2], im_scales[0]]], dtype=np.float32)
+=======
+  blobs['im_info'] = np.array(
+    [[im_blob.shape[1], im_blob.shape[2], im_scales[0]]],
+    dtype=np.float32)
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
   blobs['img_id'] = roidb[0]['img_id']
 

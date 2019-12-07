@@ -6,6 +6,7 @@ from torch.autograd import Variable
 import torchvision.models as models
 from torch.autograd import Variable
 import numpy as np
+<<<<<<< HEAD
 from lib.model.utils.config import cfg
 from lib.model.rpn.rpn import _RPN
 from lib.model.roi_pooling.modules.roi_pool import _RoIPooling
@@ -16,6 +17,17 @@ import time
 import pdb
 from lib.model.utils.net_utils import _smooth_l1_loss, _crop_pool_layer, _affine_grid_gen, _affine_theta
 
+=======
+from model.utils.config import cfg
+from model.rpn.rpn import _RPN
+from model.roi_pooling.modules.roi_pool import _RoIPooling
+from model.roi_crop.modules.roi_crop import _RoICrop
+from model.roi_align.modules.roi_align import RoIAlignAvg
+from model.rpn.proposal_target_layer_cascade import _ProposalTargetLayer
+import time
+import pdb
+from model.utils.net_utils import _smooth_l1_loss, _crop_pool_layer, _affine_grid_gen, _affine_theta
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
 class _fasterRCNN(nn.Module):
     """ faster RCNN """

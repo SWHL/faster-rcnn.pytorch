@@ -10,9 +10,15 @@ import torch.utils.data as data
 from PIL import Image
 import torch
 
+<<<<<<< HEAD
 from lib.model.utils.config import cfg
 from lib.roi_data_layer.minibatch import get_minibatch, get_minibatch
 from lib.model.rpn.bbox_transform import bbox_transform_inv, clip_boxes
+=======
+from model.utils.config import cfg
+from roi_data_layer.minibatch import get_minibatch, get_minibatch
+from model.rpn.bbox_transform import bbox_transform_inv, clip_boxes
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
 import numpy as np
 import random

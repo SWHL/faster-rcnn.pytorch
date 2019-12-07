@@ -24,6 +24,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 from torch.utils.data.sampler import Sampler
 
+<<<<<<< HEAD
 from lib.roi_data_layer.roidb import combined_roidb
 from lib.roi_data_layer.roibatchLoader import roibatchLoader
 from lib.model.utils.config import cfg, cfg_from_file, cfg_from_list, get_output_dir
@@ -32,6 +33,16 @@ from lib.model.utils.net_utils import weights_normal_init, save_net, load_net, \
 
 from lib.model.faster_rcnn.vgg16 import vgg16
 from lib.model.faster_rcnn.resnet import resnet
+=======
+from roi_data_layer.roidb import combined_roidb
+from roi_data_layer.roibatchLoader import roibatchLoader
+from model.utils.config import cfg, cfg_from_file, cfg_from_list, get_output_dir
+from model.utils.net_utils import weights_normal_init, save_net, load_net, \
+      adjust_learning_rate, save_checkpoint, clip_gradient
+
+from model.faster_rcnn.vgg16 import vgg16
+from model.faster_rcnn.resnet import resnet
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
 def parse_args():
   """
@@ -121,8 +132,12 @@ def parse_args():
 
 
 class sampler(Sampler):
+<<<<<<< HEAD
   def __init__(self, train_size, batch_size, data_source):
     super().__init__(data_source)
+=======
+  def __init__(self, train_size, batch_size):
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
     self.num_data = train_size
     self.num_per_batch = int(train_size / batch_size)
     self.batch_size = batch_size
@@ -320,7 +335,12 @@ if __name__ == '__main__':
       RCNN_loss_cls, RCNN_loss_bbox, \
       rois_label = fasterRCNN(im_data, im_info, gt_boxes, num_boxes)
 
+<<<<<<< HEAD
       loss = rpn_loss_cls.mean() + rpn_loss_box.mean() + RCNN_loss_cls.mean() + RCNN_loss_bbox.mean()
+=======
+      loss = rpn_loss_cls.mean() + rpn_loss_box.mean() \
+           + RCNN_loss_cls.mean() + RCNN_loss_bbox.mean()
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
       loss_temp += loss.item()
 
       # backward

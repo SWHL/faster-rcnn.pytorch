@@ -1,5 +1,9 @@
 data/*
+<<<<<<< HEAD
 .idea/
+=======
+
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 # READ THIS BEFORE YOU REFACTOR ME
 #
 # setup.py uses the list of patterns in this file to decide
@@ -200,4 +204,8 @@ caffe2.egg-info
 
 # cython generated files
 lib/model/utils/bbox.c
+<<<<<<< HEAD
 lib/pycocotools/_mask.c
+=======
+lib/pycocotools/_mask.c
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4

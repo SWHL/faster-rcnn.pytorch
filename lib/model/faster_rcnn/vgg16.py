@@ -13,10 +13,16 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import math
 import torchvision.models as models
+<<<<<<< HEAD
 from lib.model.faster_rcnn.faster_rcnn import _fasterRCNN
 import pdb
 
 
+=======
+from model.faster_rcnn.faster_rcnn import _fasterRCNN
+import pdb
+
+>>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 class vgg16(_fasterRCNN):
   def __init__(self, classes, pretrained=False, class_agnostic=False):
     self.model_path = 'data/pretrained_model/vgg16_caffe.pth'
