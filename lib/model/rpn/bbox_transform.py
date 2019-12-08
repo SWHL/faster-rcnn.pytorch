@@ -178,16 +178,18 @@ def bbox_overlaps_batch(anchors, gt_boxes):
 
     if anchors.dim() == 2:
 
-        N = anchors.size(0)
-        K = gt_boxes.size(1)
-
+        N = anchors.size(0)  # N 为框的个数
+        K = gt_boxes.size(1)  # K为一张图像中标注物体个数
+        # gt boxes: (x1, y1, x2, y2, cls)
         anchors = anchors.view(1, N, 4).expand(batch_size, N, 4).contiguous()
-        gt_boxes = gt_boxes[:,:,:4].contiguous()
+        gt_boxes = gt_boxes[:, :, :4].contiguous()
 
+        # 计算所有的gt_boxes的面积大小， K为图像中所含物体的个数
         gt_boxes_x = (gt_boxes[:,:,2] - gt_boxes[:,:,0] + 1)
         gt_boxes_y = (gt_boxes[:,:,3] - gt_boxes[:,:,1] + 1)
         gt_boxes_area = (gt_boxes_x * gt_boxes_y).view(batch_size, 1, K)
 
+        # 计算所有anchors_boxes的面积大小
         anchors_boxes_x = (anchors[:,:,2] - anchors[:,:,0] + 1)
         anchors_boxes_y = (anchors[:,:,3] - anchors[:,:,1] + 1)
         anchors_area = (anchors_boxes_x * anchors_boxes_y).view(batch_size, N, 1)
@@ -195,9 +197,11 @@ def bbox_overlaps_batch(anchors, gt_boxes):
         gt_area_zero = (gt_boxes_x == 1) & (gt_boxes_y == 1)
         anchors_area_zero = (anchors_boxes_x == 1) & (anchors_boxes_y == 1)
 
+        # 将anchors和gt_boxes两者统一起来
         boxes = anchors.view(batch_size, N, 1, 4).expand(batch_size, N, K, 4)
         query_boxes = gt_boxes.view(batch_size, 1, K, 4).expand(batch_size, N, K, 4)
 
+        # TODO：这几行看不懂在做什么
         iw = (torch.min(boxes[:,:,:,2], query_boxes[:,:,:,2]) - torch.max(boxes[:,:,:,0], query_boxes[:,:,:,0]) + 1)
         iw[iw < 0] = 0
 

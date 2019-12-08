@@ -14,7 +14,7 @@ import torch.nn as nn
 import numpy as np
 import numpy.random as npr
 
-from model.utils.config import cfg
+from lib.model.utils.config import cfg
 from .generate_anchors import generate_anchors
 from .bbox_transform import clip_boxes, bbox_overlaps_batch, bbox_transform_batch
 
@@ -76,17 +76,21 @@ class _AnchorTargetLayer(nn.Module):
         A = self._num_anchors
         K = shifts.size(0)
 
+        # 产生的和_ProposalLayer中一样的anchor
         self._anchors = self._anchors.type_as(gt_boxes) # move to specific gpu.
+        #  self._anchors: [1, 9, 4],有9个anchor,每个anchor有4个坐标点
+        # K = ceil(800/16) * ceil(600/16) = 50 x 38
         all_anchors = self._anchors.view(1, A, 4) + shifts.view(K, 1, 4)
-        all_anchors = all_anchors.view(K * A, 4)
+        all_anchors = all_anchors.view(K * A, 4)  # anchor个数：50x38x9
 
         total_anchors = int(K * A)
 
+        # 过滤生成的不合格的边框 [x, y, w, h]
         keep = ((all_anchors[:, 0] >= -self._allowed_border) &
                 (all_anchors[:, 1] >= -self._allowed_border) &
                 (all_anchors[:, 2] < long(im_info[0][1]) + self._allowed_border) &
                 (all_anchors[:, 3] < long(im_info[0][0]) + self._allowed_border))
-
+        # 取出keep中非0的元素的索引，并拉成向量
         inds_inside = torch.nonzero(keep).view(-1)
 
         # keep only inside anchors

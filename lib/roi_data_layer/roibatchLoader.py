@@ -10,20 +10,15 @@ import torch.utils.data as data
 from PIL import Image
 import torch
 
-<<<<<<< HEAD
 from lib.model.utils.config import cfg
 from lib.roi_data_layer.minibatch import get_minibatch, get_minibatch
 from lib.model.rpn.bbox_transform import bbox_transform_inv, clip_boxes
-=======
-from model.utils.config import cfg
-from roi_data_layer.minibatch import get_minibatch, get_minibatch
-from model.rpn.bbox_transform import bbox_transform_inv, clip_boxes
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
 import numpy as np
 import random
 import time
 import pdb
+
 
 class roibatchLoader(data.Dataset):
   def __init__(self, roidb, ratio_list, ratio_index, batch_size, num_classes, training=True, normalize=None):
@@ -58,7 +53,6 @@ class roibatchLoader(data.Dataset):
             target_ratio = 1
 
         self.ratio_list_batch[left_idx:(right_idx+1)] = torch.tensor(target_ratio.astype(np.float64)) # trainset ratio list ,each batch is same number
-
 
   def __getitem__(self, index):
     if self.training:
@@ -190,7 +184,6 @@ class roibatchLoader(data.Dataset):
             gt_boxes[:, :4].clamp_(0, trim_size)
             im_info[0, 0] = trim_size
             im_info[0, 1] = trim_size
-
 
         # check the bounding box:
         not_keep = (gt_boxes[:,0] == gt_boxes[:,2]) | (gt_boxes[:,1] == gt_boxes[:,3])

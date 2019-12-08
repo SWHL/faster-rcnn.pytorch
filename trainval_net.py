@@ -147,6 +147,7 @@ class sampler(Sampler):
   def __len__(self):
     return self.num_data
 
+
 if __name__ == '__main__':
 
   args = parse_args()
@@ -211,7 +212,7 @@ if __name__ == '__main__':
                            imdb.num_classes, training=True)
 
   dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
-                            sampler=sampler_batch, num_workers=args.num_workers)
+                                           sampler=sampler_batch, num_workers=args.num_workers)
 
   # initilize the tensor holder here.
   im_data = torch.FloatTensor(1)
@@ -312,7 +313,7 @@ if __name__ == '__main__':
       data = next(data_iter)
       im_data.data.resize_(data[0].size()).copy_(data[0])
       im_info.data.resize_(data[1].size()).copy_(data[1])
-      gt_boxes.data.resize_(data[2].size()).copy_(data[2])
+      gt_boxes.data.resize_(data[2].size()).copy_(data[2])  # 这里给gt_boxes赋值
       num_boxes.data.resize_(data[3].size()).copy_(data[3])
 
       fasterRCNN.zero_grad()
