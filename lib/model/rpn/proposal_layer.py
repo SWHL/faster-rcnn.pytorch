@@ -14,26 +14,16 @@ import torch.nn as nn
 import numpy as np
 import math
 import yaml
-<<<<<<< HEAD
+
 from lib.model.utils.config import cfg
 from .generate_anchors import generate_anchors
 from .bbox_transform import bbox_transform_inv, clip_boxes, clip_boxes_batch
 from lib.model.nms.nms_wrapper import nms
-=======
-from model.utils.config import cfg
-from .generate_anchors import generate_anchors
-from .bbox_transform import bbox_transform_inv, clip_boxes, clip_boxes_batch
-from model.nms.nms_wrapper import nms
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 
-import pdb
 
 DEBUG = False
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
 class _ProposalLayer(nn.Module):
     """
     Outputs object detection proposals by applying estimated bounding-box
@@ -44,12 +34,7 @@ class _ProposalLayer(nn.Module):
         super(_ProposalLayer, self).__init__()
 
         self._feat_stride = feat_stride
-<<<<<<< HEAD
         self._anchors = torch.from_numpy(generate_anchors(scales=np.array(scales), ratios=np.array(ratios))).float()
-=======
-        self._anchors = torch.from_numpy(generate_anchors(scales=np.array(scales), 
-            ratios=np.array(ratios))).float()
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
         self._num_anchors = self._anchors.size(0)
 
         # rois blob: holds R regions of interest, each is a 5-tuple
@@ -76,7 +61,6 @@ class _ProposalLayer(nn.Module):
         # take after_nms_topN proposals after NMS
         # return the top proposals (-> RoIs top, scores top)
 
-
         # the first set of _num_anchors channels are bg probs
         # the second set are the fg probs
         scores = input[0][:, self._num_anchors:, :, :]
@@ -91,10 +75,7 @@ class _ProposalLayer(nn.Module):
 
         batch_size = bbox_deltas.size(0)
 
-<<<<<<< HEAD
         # 将预测的坐标还原到原始图像坐标中
-=======
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
         feat_height, feat_width = scores.size(2), scores.size(3)
         shift_x = np.arange(0, feat_width) * self._feat_stride
         shift_y = np.arange(0, feat_height) * self._feat_stride
@@ -108,16 +89,12 @@ class _ProposalLayer(nn.Module):
 
         self._anchors = self._anchors.type_as(scores)
         # anchors = self._anchors.view(1, A, 4) + shifts.view(1, K, 4).permute(1, 0, 2).contiguous()
-<<<<<<< HEAD
-        # TODO: 这里不太明白，两个直接相加，应该是原图上的对应特征尺寸吧
-=======
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
+        # TODO: 这里不太明白，两个直接相加，应该是原图上的对应特征尺寸吧？
         anchors = self._anchors.view(1, A, 4) + shifts.view(K, 1, 4)
         anchors = anchors.view(1, K * A, 4).expand(batch_size, K * A, 4)
 
         # Transpose and reshape predicted bbox transformations to get them
         # into the same order as the anchors:
-
         bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous()
         bbox_deltas = bbox_deltas.view(batch_size, -1, 4)
 
@@ -158,7 +135,7 @@ class _ProposalLayer(nn.Module):
             # # 5. take top pre_nms_topN (e.g. 6000)
             order_single = order[i]
 
-            if pre_nms_topN > 0 and pre_nms_topN < scores_keep.numel():
+            if 0 < pre_nms_topN < scores_keep.numel():
                 order_single = order_single[:pre_nms_topN]
 
             proposals_single = proposals_single[order_single, :]
@@ -167,13 +144,8 @@ class _ProposalLayer(nn.Module):
             # 6. apply nms (e.g. threshold = 0.7)
             # 7. take after_nms_topN (e.g. 300)
             # 8. return the top proposals (-> RoIs top)
-
-<<<<<<< HEAD
-            keep_idx_i = nms(torch.cat((proposals_single, scores_single), 1), 
-                             nms_thresh, force_cpu=not cfg.USE_GPU_NMS)
-=======
+            # nms使用cuda编写的
             keep_idx_i = nms(torch.cat((proposals_single, scores_single), 1), nms_thresh, force_cpu=not cfg.USE_GPU_NMS)
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
             keep_idx_i = keep_idx_i.long().view(-1)
 
             if post_nms_topN > 0:

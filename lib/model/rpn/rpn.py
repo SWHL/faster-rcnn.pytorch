@@ -9,11 +9,6 @@ from .proposal_layer import _ProposalLayer
 from .anchor_target_layer import _AnchorTargetLayer
 from lib.model.utils.net_utils import _smooth_l1_loss
 
-import numpy as np
-import math
-import pdb
-import time
-
 
 class _RPN(nn.Module):
     """ region proposal network """
@@ -55,11 +50,11 @@ class _RPN(nn.Module):
 
         batch_size = base_feat.size(0)
 
+        # RPN中分类分支
         # return feature map after convrelu layer
         rpn_conv1 = F.relu(self.RPN_Conv(base_feat), inplace=True)
         # get rpn classification score
         rpn_cls_score = self.RPN_cls_score(rpn_conv1)
-
         rpn_cls_score_reshape = self.reshape(rpn_cls_score, 2)
         rpn_cls_prob_reshape = F.softmax(rpn_cls_score_reshape, 1)
         rpn_cls_prob = self.reshape(rpn_cls_prob_reshape, self.nc_score_out)

@@ -19,8 +19,8 @@ import pdb
 
 class _ProposalTargetLayer(nn.Module):
     """
-    Assign object detection proposals to ground-truth targets. Produces proposal
-    classification labels and bounding-box regression targets.
+    Assign object detection proposals to ground-truth targets.
+    Produces proposal classification labels and bounding-box regression targets.
     """
 
     def __init__(self, nclasses):

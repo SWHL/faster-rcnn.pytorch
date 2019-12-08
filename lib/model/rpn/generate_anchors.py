@@ -110,7 +110,4 @@ if __name__ == '__main__':
     a = generate_anchors()
     print(time.time() - t)
     print(a)
-<<<<<<< HEAD
-=======
-    from IPython import embed; embed()
->>>>>>> 31ae20687b1b3486155809a57eeb376259a5f5d4
+
