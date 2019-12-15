@@ -186,8 +186,7 @@ class _AnchorTargetLayer(nn.Module):
         anchors_count = bbox_inside_weights.size(1)
         bbox_inside_weights = bbox_inside_weights.view(batch_size,anchors_count,1).expand(batch_size, anchors_count, 4)
 
-        bbox_inside_weights = bbox_inside_weights.contiguous().view(batch_size, height, width, 4*A)\
-                            .permute(0,3,1,2).contiguous()
+        bbox_inside_weights = bbox_inside_weights.contiguous().view(batch_size, height, width, 4*A).permute(0,3,1,2).contiguous()
 
         outputs.append(bbox_inside_weights)
 

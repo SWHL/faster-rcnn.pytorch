@@ -64,7 +64,7 @@ class _ProposalLayer(nn.Module):
         # the first set of _num_anchors channels are bg probs
         # the second set are the fg probs
         scores = input[0][:, self._num_anchors:, :, :]
-        bbox_deltas = input[1]
+        bbox_deltas = input[1]  # bbox的偏移量
         im_info = input[2]
         cfg_key = input[3]
 
@@ -76,8 +76,9 @@ class _ProposalLayer(nn.Module):
         batch_size = bbox_deltas.size(0)
 
         # 将预测的坐标还原到原始图像坐标中
+        # Build the coordinate points for the generated anchors.
         feat_height, feat_width = scores.size(2), scores.size(3)
-        shift_x = np.arange(0, feat_width) * self._feat_stride
+        shift_x = np.arange(0, feat_width) * self._feat_stride  # 16
         shift_y = np.arange(0, feat_height) * self._feat_stride
         shift_x, shift_y = np.meshgrid(shift_x, shift_y)
         shifts = torch.from_numpy(np.vstack((shift_x.ravel(), shift_y.ravel(),
@@ -88,13 +89,13 @@ class _ProposalLayer(nn.Module):
         K = shifts.size(0)
 
         self._anchors = self._anchors.type_as(scores)
-        # anchors = self._anchors.view(1, A, 4) + shifts.view(1, K, 4).permute(1, 0, 2).contiguous()
-        # TODO: 这里不太明白，两个直接相加，应该是原图上的对应特征尺寸吧？
+        # K points, and every one responds to A anchors.
         anchors = self._anchors.view(1, A, 4) + shifts.view(K, 1, 4)
-        anchors = anchors.view(1, K * A, 4).expand(batch_size, K * A, 4)
+        anchors = anchors.view(1, K * A, 4).expand(batch_size, K * A, 4)  # 所有生成的anchors
 
         # Transpose and reshape predicted bbox transformations to get them
         # into the same order as the anchors:
+        # bbox_deltas：通过网络预测出来的bbox偏移量
         bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous()
         bbox_deltas = bbox_deltas.view(batch_size, -1, 4)
 

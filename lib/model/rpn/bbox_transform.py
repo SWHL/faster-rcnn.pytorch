@@ -85,12 +85,15 @@ def bbox_transform_inv(boxes, deltas, batch_size):
     dw = deltas[:, :, 2::4]
     dh = deltas[:, :, 3::4]
 
+    # tx = (x - x_a) / w_a
+    # tw = log(w / w_a)
     pred_ctr_x = dx * widths.unsqueeze(2) + ctr_x.unsqueeze(2)
     pred_ctr_y = dy * heights.unsqueeze(2) + ctr_y.unsqueeze(2)
     pred_w = torch.exp(dw) * widths.unsqueeze(2)
     pred_h = torch.exp(dh) * heights.unsqueeze(2)
 
     pred_boxes = deltas.clone()
+    # Covert to x1, y1, x2, y2
     # x1
     pred_boxes[:, :, 0::4] = pred_ctr_x - 0.5 * pred_w
     # y1
@@ -123,14 +126,13 @@ def clip_boxes_batch(boxes, im_shape, batch_size):
 
     return boxes
 
-def clip_boxes(boxes, im_shape, batch_size):
 
+def clip_boxes(boxes, im_shape, batch_size):
     for i in range(batch_size):
         boxes[i,:,0::4].clamp_(0, im_shape[i, 1]-1)
         boxes[i,:,1::4].clamp_(0, im_shape[i, 0]-1)
         boxes[i,:,2::4].clamp_(0, im_shape[i, 1]-1)
         boxes[i,:,3::4].clamp_(0, im_shape[i, 0]-1)
-
     return boxes
 
 
@@ -201,12 +203,12 @@ def bbox_overlaps_batch(anchors, gt_boxes):
         boxes = anchors.view(batch_size, N, 1, 4).expand(batch_size, N, K, 4)
         query_boxes = gt_boxes.view(batch_size, 1, K, 4).expand(batch_size, N, K, 4)
 
-        # TODO：这几行看不懂在做什么
+        # Remove the boxes whose width is less than zero.
         iw = (torch.min(boxes[:,:,:,2], query_boxes[:,:,:,2]) - torch.max(boxes[:,:,:,0], query_boxes[:,:,:,0]) + 1)
         iw[iw < 0] = 0
-
         ih = (torch.min(boxes[:,:,:,3], query_boxes[:,:,:,3]) - torch.max(boxes[:,:,:,1], query_boxes[:,:,:,1]) + 1)
         ih[ih < 0] = 0
+
         ua = anchors_area + gt_boxes_area - (iw * ih)
         overlaps = iw * ih / ua
 
